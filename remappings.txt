@@ -10,4 +10,3 @@
 
 lib/uniswap-hooks:v4-periphery/=lib/v4-periphery/
 lib/uniswap-hooks:v4-core/=lib/v4-core/
-lib/v3-periphery:@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol=lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Metadata.sol
