@@ -32,3 +32,6 @@
 	path = lib/uniswap-hooks
 	url = https://github.com/openzeppelin/uniswap-hooks
     branch = main
+[submodule "lib/v3-periphery"]
+	path = lib/v3-periphery
+	url = https://github.com/uniswap/v3-periphery
