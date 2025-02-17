@@ -24,6 +24,9 @@
 	path = lib/v3-core
 	url = https://github.com/uniswap/v3-core
     branch = main
+[submodule "lib/v3-periphery"]
+	path = lib/v3-periphery
+	url = https://github.com/uniswap/v3-periphery
 [submodule "lib/v2-core"]
 	path = lib/v2-core
 	url = https://github.com/uniswap/v2-core
@@ -32,6 +35,3 @@
 	path = lib/uniswap-hooks
 	url = https://github.com/openzeppelin/uniswap-hooks
     branch = main
-[submodule "lib/v3-periphery"]
-	path = lib/v3-periphery
-	url = https://github.com/uniswap/v3-periphery
