@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.24;
 
-import {DeployUniversalRouter} from "@uniswap/universal-router/script/DeployUniversalRouter.s.sol";
 import {RouterParameters} from "@uniswap/universal-router/contracts/types/RouterParameters.sol";
+import {DeployUniversalRouter} from "../DeployUniversalRouter.s.sol";
 
 contract DeployAnvil is DeployUniversalRouter {
     function setUp() public override {

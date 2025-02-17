@@ -9,12 +9,3 @@ evm_version = "cancun"
 via_ir = true
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
-
-
-additional_compiler_profiles = [
-    { name = "manager", via_ir = true, optimizer_runs = 30000 },
-]
-
-compilation_restrictions = [
-    { paths = "lib/v4-periphery/src/PositionManager.sol", optimizer_runs = 30000 },
-]
