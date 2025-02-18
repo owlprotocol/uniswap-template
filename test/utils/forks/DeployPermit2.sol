@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 import {CommonBase} from "forge-std/Base.sol";
 import {IAllowanceTransfer} from "permit2/src/interfaces/IAllowanceTransfer.sol";
+import {VmSafe} from "forge-std/Vm.sol";
 
 import {Permit2Bytecode} from "./Permit2Bytecode.sol";
 
@@ -26,5 +27,14 @@ contract DeployPermit2 is CommonBase, Permit2Bytecode {
             string.concat('["', vm.toString(address(permit2)), '","', vm.toString(PERMIT2_BYTECODE), '"]')
         );
         return permit2;
+    }
+
+    /// @notice Deploys permit2 depending on environment
+    function deployPermit2() public returns (IAllowanceTransfer) {
+        if (vm.isContext(VmSafe.ForgeContext.ScriptBroadcast)) {
+            return anvilPermit2();
+        } else {
+            return etchPermit2();
+        }
     }
 }
