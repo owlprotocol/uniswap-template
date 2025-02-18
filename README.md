@@ -10,7 +10,7 @@
 This template is actively maintained -- you can update the v4 dependencies, scripts, and helpers:
 
 ```bash
-git remote add template https://github.com/uniswapfoundation/v4-template
+git remote add template https://github.com/leovigna/uniswap-template
 git fetch template
 git merge template/main <BRANCH> --allow-unrelated-histories
 ```
@@ -19,9 +19,16 @@ git merge template/main <BRANCH> --allow-unrelated-histories
 
 ---
 
-Inpsired from [uniswapfoundation/v4-template)](https://github.com/uniswapfoundation/v4-template)
+Inspired from [uniswapfoundation/v4-template)](https://github.com/uniswapfoundation/v4-template)
 
-Unified template with Uniswap core (v2,v3,v4), Uniswap periphery (v4), Uniswap Universal Router, Openzeppelin Uniswap Hooks.
+Unified template with Uniswap contract dependencies
+
+- Uniswap core ([v2](https://github.com/Uniswap/v2-core),[v3](https://github.com/Uniswap/v3-core),[v4](https://github.com/Uniswap/v4-core))
+- Uniswap periphery ([v3](https://github.com/Uniswap/v3-periphery), [v4](https://github.com/Uniswap/v4-periphery))
+- Uniswap [Universal Router](https://github.com/Uniswap/universal-router)
+- OpenZeppelin Uniswap [Hooks](https://github.com/OpenZeppelin/uniswap-hooks)
+- OpenZeppelin [Contracts](https://github.com/OpenZeppelin/openzeppelin-contracts)
+- Permit2 [Permit2](https://github.com/Uniswap/permit2)
 
 A key goal of this template is to enable simple local development with [Anvil](https://book.getfoundry.sh/reference/anvil/) and to enable common Uniswap operations to get familiar with the contracts:
 
@@ -40,7 +47,7 @@ We recommend also checking out the following guides:
 
 *Ensure that you have correctly installed Foundry (Forge) Stable. You can update Foundry by running:*
 
-```
+```bash
 foundryup
 ```
 
@@ -52,8 +59,18 @@ foundryup
 
 ```bash
 forge install
-forge build --via-ir
+forge build
 forge test
+```
+
+## Script Simulation
+
+Scripts can be run in the forge simulation
+
+```bash
+forge script script/DeployAnvil.s.sol \
+    --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+    --code-size-limit 393216
 ```
 
 ### Local Development (Anvil)
@@ -66,7 +83,7 @@ anvil --disable-code-size-limit
 
 # in a new terminal
 #10x code size limit, some contracts seem to have to be fine tuned
-forge script script/Anvil.s.sol \
+forge script script/DeployAnvil.s.sol \
     --rpc-url http://localhost:8545 \
     --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
     --broadcast \
