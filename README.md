@@ -19,7 +19,7 @@ git merge template/main <BRANCH> --allow-unrelated-histories
 
 ---
 
-Inspired from [uniswapfoundation/v4-template)](https://github.com/uniswapfoundation/v4-template)
+Inspired from [uniswapfoundation/v4-template](https://github.com/uniswapfoundation/v4-template)
 
 Unified template with Uniswap contract dependencies
 
