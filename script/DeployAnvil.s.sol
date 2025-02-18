@@ -171,7 +171,7 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
         // Combine actions and params into inputs
         inputs[0] = abi.encode(swapActions, swapParams);
         // Execute the swap
-        contracts.router.execute(commands, inputs, block.timestamp);
+        contracts.router.execute(commands, inputs, block.timestamp + 60);
 
         // 3.6: (Optional) Verifying the Swap Output
         console2.log("tokenA:", tokenA.balanceOf(msg.sender));
