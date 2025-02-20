@@ -22,6 +22,7 @@ import {IPositionManager} from "@uniswap/v4-periphery/src/interfaces/IPositionMa
 import {PositionManager} from "@uniswap/v4-periphery/src/PositionManager.sol";
 import {IPositionDescriptor} from "@uniswap/v4-periphery/src/interfaces/IPositionDescriptor.sol";
 import {IV4Router} from "@uniswap/v4-periphery/src/interfaces/IV4Router.sol";
+import {IV4Quoter} from "@uniswap/v4-periphery/src/interfaces/IV4Quoter.sol";
 import {IWETH9} from "@uniswap/v4-periphery/src/interfaces/external/IWETH9.sol";
 import {Actions} from "@uniswap/v4-periphery/src/libraries/Actions.sol";
 
@@ -29,6 +30,7 @@ import {RouterParameters} from "@uniswap/universal-router/contracts/types/Router
 import {UnsupportedProtocol} from "@uniswap/universal-router/contracts/deploy/UnsupportedProtocol.sol";
 import {UniversalRouter} from "@uniswap/universal-router/contracts/UniversalRouter.sol";
 import {Commands} from "@uniswap/universal-router/contracts/libraries/Commands.sol";
+import {V4Quoter} from "@uniswap/universal-router/lib/v4-periphery/src/lens/V4Quoter.sol";
 
 import {IHooks} from "@uniswap/v4-core/src/interfaces/IHooks.sol";
 
@@ -41,6 +43,7 @@ struct UniswapContracts {
     IPoolManager v4PoolManager;
     IPositionManager v4PositionManager;
     UniversalRouter router;
+    IV4Quoter v4Quoter;
 }
 
 /// @notice Forge script for deploying v4 & hooks to **anvil**
@@ -63,6 +66,7 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
         // console2.log("v3NFTPositionManager:", params.v3NFTPositionManager);
         console2.log("v4PositionManager:", address(contracts.v4PositionManager));
         console2.log("router:", address(contracts.router));
+        console2.log("v4Quoter:", address(contracts.v4Quoter));
 
         testLifeCycle(contracts);
 
@@ -204,12 +208,16 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
 
         UniversalRouter router = new UniversalRouter{salt: BYTES32_ZERO}(routerParams);
 
+        IV4Quoter v4Quoter = IV4Quoter(address(new V4Quoter{salt: BYTES32_ZERO}(v4PoolManager)));
+
+
         return UniswapContracts({
             permit2: permit2,
             unsupported: unsupported,
             v4PoolManager: v4PoolManager,
             v4PositionManager: v4PositionManager,
-            router: router
+            router: router,
+            v4Quoter: v4Quoter
         });
     }
 }
