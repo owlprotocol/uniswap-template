@@ -105,13 +105,13 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
 
         // 1. Initialize the parameters provided to multicall()
         int24 tickSpacing = 60;
-        PoolKey memory pool = PoolKey(
+        PoolKey memory poolKey = PoolKey(
             Currency.wrap(address(token0)), Currency.wrap(address(token1)), 3000, tickSpacing, IHooks(address(0))
         );
         // 3. Encode the initializePool parameters
         uint160 startingPrice = Constants.SQRT_PRICE_1_1;
         multicallParams[0] =
-            abi.encodeWithSelector(contracts.v4PositionManager.initializePool.selector, pool, startingPrice);
+            abi.encodeWithSelector(contracts.v4PositionManager.initializePool.selector, poolKey, startingPrice);
         // 4. Initialize the mint-liquidity parameters
         bytes memory mintActions = abi.encodePacked(uint8(Actions.MINT_POSITION), uint8(Actions.SETTLE_PAIR));
         // 5. Encode the MINT_POSITION parameters
@@ -126,9 +126,9 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
         ); // Encodes a 100/100 position at 1:1 price across the entire tick range
         bytes[] memory mintParams = new bytes[](2);
         mintParams[0] =
-            abi.encode(pool, tickLower, tickUpper, liquidity, 50_000 ether, 50_000 ether, msg.sender, ZERO_BYTES);
+            abi.encode(poolKey, tickLower, tickUpper, liquidity, 50_000 ether, 50_000 ether, msg.sender, ZERO_BYTES);
         // 6. Encode the SETTLE_PAIR parameters
-        mintParams[1] = abi.encode(pool.currency0, pool.currency1);
+        mintParams[1] = abi.encode(poolKey.currency0, poolKey.currency1);
         // 7. Encode the modifyLiquidites call
         uint256 deadline = block.timestamp + 60;
         multicallParams[1] = abi.encodeWithSelector(
@@ -145,8 +145,8 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
         // Swap
         // See https://docs.uniswap.org/contracts/v4/quickstart/swap
         // 3.2: Encoding the Swap Command
-        bytes memory commands = abi.encodePacked(uint8(Commands.V4_SWAP));
-        bytes[] memory inputs = new bytes[](1);
+        bytes memory routerCommands = abi.encodePacked(uint8(Commands.V4_SWAP));
+        bytes[] memory routerInputs = new bytes[](1);
         // 3.3: Action Encoding
         // Encode V4Router actions
         bytes memory swapActions =
@@ -159,23 +159,26 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
         uint128 minAmountOut = 0;
         swapParams[0] = abi.encode(
             IV4Router.ExactInputSingleParams({
-                poolKey: pool,
+                poolKey: poolKey,
                 zeroForOne: true, // true if we're swapping token0 for token1
                 amountIn: amountIn, // amount of tokens we're swapping
                 amountOutMinimum: minAmountOut, // minimum amount we expect to receive
                 hookData: bytes("") // no hook data needed
             })
         );
+        console2.log("swapParams[0]:");
+        console2.logBytes(swapParams[0]);
+
         // SETTLE_ALL: specify input tokens for the swap
-        swapParams[1] = abi.encode(pool.currency0, amountIn);
+        swapParams[1] = abi.encode(poolKey.currency0, amountIn);
         // TAKE_ALL: specify output tokens from the swap
-        swapParams[2] = abi.encode(pool.currency1, minAmountOut);
+        swapParams[2] = abi.encode(poolKey.currency1, minAmountOut);
 
         // 3.5: Executing the Swap
         // Combine actions and params into inputs
-        inputs[0] = abi.encode(swapActions, swapParams);
+        routerInputs[0] = abi.encode(swapActions, swapParams);
         // Execute the swap
-        contracts.router.execute(commands, inputs, block.timestamp + 60);
+        contracts.router.execute(routerCommands, routerInputs, block.timestamp + 60);
 
         // 3.6: (Optional) Verifying the Swap Output
         console2.log("tokenA:", tokenA.balanceOf(msg.sender));
