@@ -66,6 +66,7 @@ contract DeployUniswapV4 is Script, DeployCreate2Deployer, DeployPermit2 {
         // console2.log("v3NFTPositionManager:", params.v3NFTPositionManager);
         console2.log("v4PositionManager:", address(contracts.v4PositionManager));
         console2.log("router:", address(contracts.router));
+        console2.log("v4Quoter:", address(contracts.v4Quoter));
 
         testLifeCycle(contracts);
 
